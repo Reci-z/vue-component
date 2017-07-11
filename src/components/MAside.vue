@@ -1,5 +1,9 @@
 <template>
-<div class="">
+<div class="Maside">
+
+	<div class="zMouse-zezhao" v-if="addClass" @click.stop="clearClass">
+		
+	</div>
 	<transition name="fage">
 		<div class="zMouse-aside" v-if="addClass" @click.stop>
 			 <slot name="butta"></slot>
@@ -12,7 +16,12 @@
 export default {
 
   name: 'MAside',
-  props:['addClass']
+  props:['addClass'],
+  methods:{
+  	clearClass(){
+  		this.$emit('update:addClass',false)
+  	}
+  }
 };
 </script>
 
@@ -25,13 +34,21 @@ export default {
 		transform: translateX(100%)
 	}
 }
+.zMouse-zezhao{
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	background: rgba(0,0,0,.1);
+	z-index: 2;
+}
 .zMouse-aside{
 	height: 100%;
 	position: absolute;
-	background:#ccc;
+	background:#fff;
 	width: 65%;
 	left: 0;
 	top: 0;
+	z-index: 99;
 }
 
 .fage-enter-active{
