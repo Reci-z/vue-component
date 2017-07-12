@@ -18,6 +18,14 @@
         <c-arousel :showimg="lists" class="main-carousel">
             
         </c-arousel>
+
+        <div style="text-align: right;">
+            <button @click.stop="isShow = true">123</button>
+        </div>
+
+        <z-aside :is-show.sync="isShow">
+            <h1>内容</h1>
+        </z-aside>
     </div>
 </template>
 
@@ -26,6 +34,8 @@ import MHeader from '@/components/MHeader';
 import MAside from '@/components/MAside';
 import CArousel from '@/components/CArousel';
 
+import ZAside from '@/components/ZAside';
+
 export default {
     name: 'Main',
     data(){
@@ -33,13 +43,17 @@ export default {
             open:false,
             lists:{
                 src:['/static/b1.jpg','/static/b2.jpg','/static/b3.jpg']
-            }
+            },
+
+            isShow: false
         }
     },
     components: {
         MHeader,
         MAside,
-        CArousel
+        CArousel,
+
+        ZAside
     }
 }
 </script>
