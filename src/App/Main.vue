@@ -1,10 +1,27 @@
 <template>
     <div class="" >
-        <m-header title="标题">
+        <!-- 头部 -->
+        <z-header title="标题">
             <div slot="left" @click="open = !open"><img src="../assets/stealth.png" /></div>
-        </m-header>
-        <m-aside :addClass.sync="open">
-        	<div slot="butta" @click="open = !open">
+
+            <div slot="right" @click.stop="isshow = true"><img src="../assets/stealth.png" /></div>
+        </z-header>
+
+        <!-- 侧边滑出栏 不带遮罩层 -->
+        <z-asiderigth :isshow.sync="isshow">
+            <div class="header-mean">
+                <div class="header-phone">
+                    <span><img src="../assets/avatar.jpg" /></span>
+                </div>
+                <div class="header-describe">
+                    无遮罩滑出的侧边栏，可以添加自己喜欢的内容
+                </div>
+            </div>
+        </z-asiderigth>
+
+        <!-- 侧边滑出栏 带遮罩层 -->
+       <z-asideleft :addClass.sync="open">
+            <div @click="open = !open">
                 <div class="header-mean">
                     <div class="header-phone">
                         <span><img src="../assets/avatar.jpg" /></span>
@@ -14,37 +31,61 @@
                     </div>
                 </div>
             </div>
-        </m-aside>
-        <c-arousel :showimg="lists" class="main-carousel">
-            
-        </c-arousel>
+        </z-asideleft>
+
+        <!-- 轮播图 -->
+        <z-arousel :showimg="lists" class="main-carousel">
+        </z-arousel>
+
+        <!-- 下拉选择 -->
+        <z-select :placeholder.sync="value" :options="foods">
+            <h3 slot="h3title">下拉选择框</h3>
+        </z-select>
     </div>
 </template>
 
 <script>
-import MHeader from '@/components/MHeader';
-import MAside from '@/components/MAside';
-import CArousel from '@/components/CArousel';
+import ZHeader from '@/components/ZHeader';
+import ZAsideleft from '@/components/ZAsideleft';
+import ZAsiderigth from '@/components/ZAsiderigth';
+import ZArousel from '@/components/ZArousel';
+import ZSelect from '@/components/ZSelect';
 
 export default {
     name: 'Main',
     data(){
         return {
             open:false,
+            isshow:false,
             lists:{
                 src:['/static/b1.jpg','/static/b2.jpg','/static/b3.jpg']
-            }
+            },
+            foods:{
+                various:[
+                    {text:'麻辣小龙虾'},
+                    {text:'巧克力冰淇淋'},
+                    {text:'炸酱面'},
+                    {text:'椒盐排条'},
+                    {text:'糖醋小排'}
+                ]                
+            },
+            value:'请选择'
         }
     },
     components: {
-        MHeader,
-        MAside,
-        CArousel
+        ZHeader,
+        ZAsideleft,
+        ZAsiderigth,
+        ZArousel,
+        ZSelect
     }
 }
 </script>
 
 <style>
+h3{
+    color: #666;
+}
 .header-mean{
     width: 100%;
     height: 240px;

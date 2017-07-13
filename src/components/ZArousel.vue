@@ -15,7 +15,7 @@
 
 <script>
 export default {
-  name: 'CArousel',
+  name: 'ZArousel',
   props:['showimg'],
   data(){
   	return {

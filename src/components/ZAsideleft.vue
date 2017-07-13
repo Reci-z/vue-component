@@ -6,7 +6,7 @@
 	</div>
 	<transition name="fage">
 		<div class="zMouse-aside" v-if="addClass" @click.stop>
-			 <slot name="butta"></slot>
+			 <slot></slot>
 		</div>
 	</transition>
 </div>
@@ -15,7 +15,7 @@
 <script>
 export default {
 
-  name: 'MAside',
+  name: 'ZAsideleft',
   props:['addClass'],
   methods:{
   	clearClass(){
@@ -26,14 +26,6 @@ export default {
 </script>
 
 <style lang="css">
-@keyframes zMousetranslateX{
-	0%{
-		transform: translateX(0px)
-	}
-	100%{
-		transform: translateX(100%)
-	}
-}
 .zMouse-zezhao{
 	width: 100%;
 	height: 100%;
@@ -52,12 +44,12 @@ export default {
 }
 
 .fage-enter-active{
-	animation: goin .5s linear;
+	animation: usegoin .5s linear;
 }
 .fage-leave-active{
-	animation: goout .5s linear;
+	animation: usegoout .5s linear;
 }
-@keyframes goin {
+@keyframes usegoin {
 	0%{
 		transform: translateX(-65%)
 	}
@@ -65,7 +57,7 @@ export default {
 		transform: translateX(0px)
 	}
 }
-@keyframes goout {
+@keyframes usegoout {
 	0%{
 		transform: translateX(0px)
 	}

@@ -16,7 +16,7 @@
 
 <script>
 export default {
-    name: 'MHeader',
+    name: 'ZHeader',
     props: {
         title: {
           type:String
@@ -49,7 +49,7 @@ export default {
 .zMouse-header .zMouse-header-title > span {
   display: inline-block;
 }
-.zMouse-header .zMouse-header-left img{width: 36px;}
+.zMouse-header .zMouse-header-left img,.zMouse-header .zMouse-header-right img{width: 36px;}
 .zMouse-header .zMouse-header-left,.zMouse-header .zMouse-header-right {
   position: absolute;
   top: 7px;
