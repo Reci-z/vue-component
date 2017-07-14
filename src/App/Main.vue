@@ -39,8 +39,13 @@
 
         <!-- 下拉选择 -->
         <z-select :placeholder.sync="value" :options="foods">
-            <h3 slot="h3title">下拉选择框</h3>
+            <h3 >下拉选择框</h3>
         </z-select>
+
+        <!-- 日期选择 -->
+        <z-date class="datestyle" :start="2000" :end="2099" :defaultNum.sync="defaultNum">
+            <h3 >日期选择</h3>
+        </z-date>
     </div>
 </template>
 
@@ -50,6 +55,7 @@ import ZAsideleft from '@/components/ZAsideleft';
 import ZAsiderigth from '@/components/ZAsiderigth';
 import ZArousel from '@/components/ZArousel';
 import ZSelect from '@/components/ZSelect';
+import ZDate from '@/components/ZDate';
 
 export default {
     name: 'Main',
@@ -57,6 +63,9 @@ export default {
         return {
             open:false,
             isshow:false,
+            defaultNum:2000,
+            start:2000,
+            end:2090,
             lists:{
                 src:['/static/b1.jpg','/static/b2.jpg','/static/b3.jpg']
             },
@@ -77,7 +86,8 @@ export default {
         ZAsideleft,
         ZAsiderigth,
         ZArousel,
-        ZSelect
+        ZSelect,
+        ZDate
     }
 }
 </script>
@@ -110,5 +120,8 @@ h3{
 }
 .main-carousel{
     padding-top: 50px;
+}
+.datestyle{
+    padding-top: 20px;
 }
 </style>

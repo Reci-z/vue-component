@@ -1,6 +1,6 @@
 <template>
 	<div class="zmouse-select">
-		<slot name="h3title"></slot>
+		<slot></slot>
 		<div class="zMouse-main">
 			<div class="select-input" ref="select" @click.stop="showSelect( $event)">
 				<span class="valuestyle">{{placeholder}}</span>
@@ -120,6 +120,8 @@ export default {
 	left: 0;
 	top: 40px;
 	box-shadow: 5px 5px 5px #ccc;
+	z-index: 99;
+	background: #fff;
 }
 .select-options li{
 	width: 100%;
