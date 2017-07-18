@@ -31,6 +31,7 @@ export default {
     position: fixed;
     box-sizing: border-box;
     background:#474a4f;
+    z-index: 9999;
 }
 .zMouse-header .zMouse-header-title,.zMouse-header h1 {
     margin: 0 50px;

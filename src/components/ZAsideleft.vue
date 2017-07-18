@@ -1,11 +1,10 @@
 <template>
 <div class="Maside">
-
-	<div class="zMouse-zezhao" v-if="addClass" @click.stop="clearClass">
+	<div class="zMouse-zezhao" v-if="addClass" @touchend="clearClass" :class="{backmask:getBoolean}">
 		
 	</div>
 	<transition name="fage">
-		<div class="zMouse-aside" v-if="addClass" @click.stop>
+		<div class="zMouse-aside" v-if="addClass" @touchend.stop>
 			 <slot></slot>
 		</div>
 	</transition>
@@ -16,10 +15,15 @@
 export default {
 
   name: 'ZAsideleft',
-  props:['addClass'],
+  props:['addClass','mask'],
   methods:{
   	clearClass(){
   		this.$emit('update:addClass',false)
+  	}
+  },
+  computed:{
+  	getBoolean(){
+  		return this.mask=='false'?false :true
   	}
   }
 };
@@ -29,18 +33,20 @@ export default {
 .zMouse-zezhao{
 	width: 100%;
 	height: 100%;
-	position: absolute;
-	background: rgba(0,0,0,.1);
+	position: absolute;	
 	z-index: 2;
+}
+.backmask{
+	background: rgba(0,0,0,.1);
 }
 .zMouse-aside{
 	height: 100%;
-	position: absolute;
+	position: fixed;
 	background:#fff;
 	width: 65%;
 	left: 0;
 	top: 0;
-	z-index: 99;
+	z-index: 9999;
 }
 
 .fage-enter-active{

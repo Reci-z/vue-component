@@ -2,13 +2,13 @@
 	<div class="zmouse-select">
 		<slot></slot>
 		<div class="zMouse-main">
-			<div class="select-input" ref="select" @click.stop="showSelect( $event)">
+			<div class="select-input" ref="select" @touchend.stop="showSelect( $event)">
 				<span class="valuestyle">{{placeholder}}</span>
 				<span class="triangle"></span>
 			</div>
 			<transition name="selectfage">	
 				<ul class="select-options" v-show="open" >
-					<li v-for="food in options.various" @click.stop="getVaqlue($event,food.text)">{{food.text}}</li>
+					<li v-for="food in options.various" @touchend.stop="getVaqlue($event,food.text)">{{food.text}}</li>
 				</ul>
 			</transition>	
 		</div>				
@@ -26,6 +26,9 @@ export default {
   	},
   	options:{
   		type:Object
+  	},
+  	isshow:{
+  		type:Boolean
   	}
   },
   data(){
@@ -38,10 +41,10 @@ export default {
   	  	this.firstValue = this.placeholder;
   },
   mounted(){
-  	document.addEventListener('click',this.hide)
+  	document.addEventListener('touchend',this.hide)
   },
   beforeDestroy(){
-  	document.removeEventListener('click',this.hide)
+  	document.removeEventListener('touchend',this.hide)
   },
   methods:{
   	showSelect(e){

@@ -2,26 +2,12 @@
     <div class="" >
         <!-- 头部 -->
         <z-header title="标题">
-            <div slot="left" @click="open = !open"><img src="../assets/stealth.png" /></div>
-
-            <div slot="right" @click.stop="isshow = true"><img src="../assets/stealth.png" /></div>
+            <div slot="left" @touchend="open = !open"><img src="../assets/stealth.png" /></div>
         </z-header>
-
-        <!-- 侧边滑出栏 不带遮罩层 -->
-        <z-asiderigth :isshow.sync="isshow">
-            <div class="header-mean">
-                <div class="header-phone">
-                    <span><img src="../assets/avatar.jpg" /></span>
-                </div>
-                <div class="header-describe">
-                    无遮罩滑出的侧边栏，可以添加自己喜欢的内容
-                </div>
-            </div>
-        </z-asiderigth>
-
-        <!-- 侧边滑出栏 带遮罩层 -->
-       <z-asideleft :addClass.sync="open">
-            <div @click="open = !open">
+        
+        <!-- 侧边滑出栏 mask控制遮罩层-->
+       <z-asideleft :addClass.sync="open" mask="false">
+            <div @touchend="open = !open">
                 <div class="header-mean">
                     <div class="header-phone">
                         <span><img src="../assets/avatar.jpg" /></span>
@@ -32,40 +18,97 @@
                 </div>
             </div>
         </z-asideleft>
+        <z-scroll>
+            <!-- 轮播图 -->
+            <z-arousel :showimg="lists" class="main-carousel">
+            </z-arousel>
 
-        <!-- 轮播图 -->
-        <z-arousel :showimg="lists" class="main-carousel">
-        </z-arousel>
+            <!-- 下拉选择 -->
+            <z-select :placeholder.sync="value" :options="foods">
+                <h3 >下拉选择框</h3>
+            </z-select>
 
-        <!-- 下拉选择 -->
-        <z-select :placeholder.sync="value" :options="foods">
-            <h3 >下拉选择框</h3>
-        </z-select>
+            <!-- 日期选择 -->
+            <div class="main-datashow">
+                <h3 class="h3date">日期选择：<span style="color: red">{{defaultNum}}</span></h3> 
+                <button class="selectyear" @touchend="changeyear">选择日期</button>
+            </div>  
+            <div>
+                1<br>
+                1<br>
+                1<br>
+                1<br>
+                1<br>
+                1<br>
+                1<br>
+                1<br>
+                1<br>
+                1<br>
+                1<br>
+                1<br>
+                1<br>
+                1<br>
+                1<br>
+                1<br>
+                1<br>
+                1<br>
+                1<br>
+                1<br>
+                1<br>
+                1<br>
+                1<br>
+                1<br>
+                1<br>
+                1<br>
+                1<br>
+                1<br>
+                1<br>
+                1<br>
+                1<br>
+                1<br>
+                1<br>
+                1<br>
+                1<br>
+                1<br>
+                1<br>
+                1<br>
+                1<br>
+                1<br>
+                1<br>
+                1<br>
+                1<br>
+                1<br>
+                1<br>
+                1<br>
+                1<br>
+                1<br>
+                1<br>
+            </div>
 
-        <!-- 日期选择 -->
-        <z-date class="datestyle" :start="2000" :end="2099" :defaultNum.sync="defaultNum">
-            <h3 >日期选择</h3>
-        </z-date>
+        </z-scroll> 
+        <z-date class="datestyle" :showDate.sync="isshowdata" :start="2000" :end="2099" :defaultNum.sync="defaultNum"></z-date>  
+         
     </div>
 </template>
 
 <script>
 import ZHeader from '@/components/ZHeader';
 import ZAsideleft from '@/components/ZAsideleft';
-import ZAsiderigth from '@/components/ZAsiderigth';
 import ZArousel from '@/components/ZArousel';
 import ZSelect from '@/components/ZSelect';
 import ZDate from '@/components/ZDate';
+import ZScroll from '@/components/ZScroll';
+import ZDrog from '@/components/ZDrog';
 
 export default {
     name: 'Main',
     data(){
         return {
             open:false,
-            isshow:false,
             defaultNum:2000,
             start:2000,
             end:2090,
+            isshowdata:false,
             lists:{
                 src:['/static/b1.jpg','/static/b2.jpg','/static/b3.jpg']
             },
@@ -81,13 +124,19 @@ export default {
             value:'请选择'
         }
     },
+    methods:{
+        changeyear(){
+            this.isshowdata = true;
+        }
+    },
     components: {
         ZHeader,
         ZAsideleft,
-        ZAsiderigth,
         ZArousel,
         ZSelect,
-        ZDate
+        ZDate,
+        ZScroll,
+        ZDrog
     }
 }
 </script>
@@ -118,10 +167,18 @@ h3{
     color: #fff;
     padding: 0 10px;
 }
-.main-carousel{
-    padding-top: 50px;
-}
 .datestyle{
     padding-top: 20px;
+}
+.main-datashow{
+    width: 94%;
+    margin: 40px auto 0 ;
+}
+.selectyear{
+  border-radius: 0;
+  border: 1px solid #000;
+  background: #fff;
+  font-size: 16px;
+  outline: none;
 }
 </style>
