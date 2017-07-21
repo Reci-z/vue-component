@@ -20,7 +20,7 @@
         </z-asideleft>
         <z-scroll>
             <!-- 轮播图 -->
-            <z-arousel :showimg="lists" class="main-carousel">
+            <z-arousel :showimg="lists" time="1500" autoplay="true" autonav="true" class="main-carousel">
             </z-arousel>
 
             <!-- 下拉选择 -->
@@ -33,57 +33,6 @@
                 <h3 class="h3date">日期选择：<span style="color: red">{{defaultNum}}</span></h3> 
                 <button class="selectyear" @touchend="changeyear">选择日期</button>
             </div>  
-            <div>
-                1<br>
-                1<br>
-                1<br>
-                1<br>
-                1<br>
-                1<br>
-                1<br>
-                1<br>
-                1<br>
-                1<br>
-                1<br>
-                1<br>
-                1<br>
-                1<br>
-                1<br>
-                1<br>
-                1<br>
-                1<br>
-                1<br>
-                1<br>
-                1<br>
-                1<br>
-                1<br>
-                1<br>
-                1<br>
-                1<br>
-                1<br>
-                1<br>
-                1<br>
-                1<br>
-                1<br>
-                1<br>
-                1<br>
-                1<br>
-                1<br>
-                1<br>
-                1<br>
-                1<br>
-                1<br>
-                1<br>
-                1<br>
-                1<br>
-                1<br>
-                1<br>
-                1<br>
-                1<br>
-                1<br>
-                1<br>
-                1<br>
-            </div>
 
         </z-scroll> 
         <z-date class="datestyle" :showDate.sync="isshowdata" :start="2000" :end="2099" :defaultNum.sync="defaultNum"></z-date>  

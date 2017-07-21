@@ -39,7 +39,7 @@
 
       //内容高
 		this.scrolldata.ScrollH =this.$refs.usescroll.offsetHeight;
-      console.log(this.scrolldata.wrapW,this.scrolldata.ScrollH)
+      // console.log(this.scrolldata.wrapW,this.scrolldata.ScrollH)
       if(this.scrolldata.ScrollH<this.scrolldata.wrapW){
          this.scrolldata.SCROLL.style.height="100%";
       }

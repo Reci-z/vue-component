@@ -1,13 +1,14 @@
 <template>
 <div class="">
-	<div class="zMOuse-banner">
-		<transition-group tag="ul" class="banner-style" name="list">
-			<li v-for="(list,index) in showimg.src" :key="index" v-show="index == currenyt">
+	<div class="zMOuse-banner" ref="bannerWrap">
+
+		<ul ref="bannerlist" @touchstart="bannerstart($event)" @touchmove="bannermove($event)" @touchend="bannerend($event)">
+			<li v-for="(list,index) in showimg.src"  >	
 				<img :src="list" >
 			</li>
-		</transition-group>
-		<div class="carousel-items">
-	    	<span v-for="(item,index) in showimg.src" :class="{'active':index==currenyt}"></span>
+		</ul>
+		<div class="carousel-items" v-show="getautonav">
+	    	<span v-for="(item,index) in showimg.src" :class="{'active':index==currenyt%length}"></span>
 	  	</div>
 	</div>
 </div>
@@ -16,24 +17,110 @@
 <script>
 export default {
   name: 'ZArousel',
-  props:['showimg'],
+  props:['showimg','time','autoplay','autonav'],
   data(){
   	return {
-  		currenyt:0
+  		currenyt:0,
+  		bannerul:'',
+  		bannerli:[],
+  		oTimer:0,
+  		translateX:'',
+  		wrapW:'',
+  		length:'',
+  		startPonint:0,
+  		startElement:0
   	}
   },
-  created(){
-  	this.autoPlay();
+  computed:{
+  		getautoplay(){
+  			return this.autoplay=='true'?true:false;
+  		},
+  		getautonav(){
+  			// console.log(this.autonav)
+  			return this.autonav=='true'?true:false;
+  		}
+  },
+  mounted(){
+  	this.bannerul = this.$refs.bannerlist; 	
+	this.bannerul.innerHTML += this.bannerul.innerHTML;
+	this.bannerli = Array.from(this.bannerul.children);
+	this.length = this.bannerli.length/2
+  	this.wrapW = this.$refs.bannerWrap.clientWidth;
+  	// console.log(this.wrapW)
+
+  	this.bannerul.style.width = this.wrapW*this.bannerli.length+'px';
+
+  	for(var i=0;i<this.bannerli.length;i++){
+  		this.bannerli[i].style.width = 100/this.bannerli.length+'%';
+  	};
+  	if(this.getautoplay){
+	  	this.oTimer = setInterval(()=>{
+	  		this.gocontinue();
+
+	  	},this.time);  	
+  	}
   },
   methods:{
-  	autoPlay(){
-  		setInterval(()=>{
-  			this.currenyt++;
-	  		if(this.currenyt>this.showimg.src.length-1){
-				this.currenyt = 0;
-	  		}
-  		},4000)  		
-  	}
+  	transitionEnd(){
+  		this.bannerul.style.transition = "none";
+  		this.currenyt = this.bannerli.length/2-1;
+  		this.translateX = -this.currenyt* this.wrapW;
+		this.bannerul.style.transform = "translateX("+this.translateX+"px)"
+  	},
+  	bannerstart(e){
+  		clearInterval(this.oTimer);	
+
+  		var now = this.currenyt
+  		this.bannerul.transition = "none";
+  		if(now==0){
+  			now = this.bannerli.length/2;
+  			// console.log(now)
+  		}
+  		if(now==this.bannerli.length-1){
+  			now = this.bannerli.length/2-1;
+  			// console.log(now)
+  		}
+  		this.translateX = -now* this.wrapW;
+  		this.bannerul.style.transform = "translateX("+this.translateX+"px)"
+
+  		this.startElement = this.translateX;
+  		// console.log(this.translateX)
+  		this.startPonint = e.changedTouches[0].pageX;
+  	},
+  	bannermove(e){
+  		var nowPoint = e.changedTouches[0].pageX;
+  		var dis = nowPoint - this.startPonint;
+  		// console.log(dis)
+  		this.translateX = this.startElement + dis;
+  		this.bannerul.style.transform = "translateX("+this.translateX+"px)";
+  	},
+	bannerend(e){
+		this.currenyt = Math.round(Math.abs(this.translateX/this.wrapW));
+
+		this.translateX = -this.currenyt* this.wrapW;
+	  	this.bannerul.style.transform = "translateX("+this.translateX+"px)";
+	  	if(this.getautoplay){
+	  		this.oTimer = setInterval(()=>{
+		  		this.gocontinue();
+
+		  	},this.time); 
+	  	}  	
+	},
+	gocontinue(){
+		this.currenyt++;	
+  		if(this.currenyt==this.bannerli.length-1){
+  			this.translateX = -this.currenyt* this.wrapW;
+  			this.bannerul.style.transform = "translateX("+this.translateX+"px)"
+  			this.bannerul.addEventListener('transitionend',this.transitionEnd);
+  			return;
+  		};
+
+  		this.bannerul.removeEventListener('transitionend',this.transitionEnd);
+  		this.translateX = -this.currenyt* this.wrapW;
+  		this.bannerul.style.transform = "translateX("+this.translateX+"px)"
+  		this.bannerul.style.transition = ".5s transform";
+
+	}
   }
 };
 </script>
@@ -45,21 +132,25 @@ ul{
 	list-style: none;
 }
 .zMOuse-banner{
-	position: relative;
 	width: 100%;
 	height: 230px;
 	overflow: hidden;
 	background: #fff;
 }
-.banner-style,.banner-style li img{
+.zMOuse-banner ul{
+	overflow: hidden;
+	position: relative;
+	transform: translateX(0px);
+}
+.zMOuse-banner ul li{
+	float: left;
+}
+.zMOuse-banner ul li img{
 	width: 100%;
 	height: 100%;
+	vertical-align: top;
 }
-.banner-style li{
-	position: absolute;
-	width: 100%;
-	height: 100%;
-}
+
 .carousel-items{
 	position: absolute;
 	z-index: 10;
@@ -74,28 +165,10 @@ ul{
 	height: 6px;
 	width: 20px;
 	margin: 0 3px;
-	background:#ccc; 
+	background:rgba(255,255,255,.3); 
 }
 .active{
-	background: #fff !important;
-}
-
-.list-enter-active {
- transition: all 1s ease;
- transform: translateX(0)
-}
-
-.list-leave-active {
- transition: all 1s ease;
- transform: translateX(-100%)
-}
-
-.list-enter {
- transform: translateX(100%)
-}
-
-.list-leave {
- transform: translateX(0)
+	background:rgba(255,255,255,1) !important; 
 }
 
 </style>

@@ -57,7 +57,7 @@ export default {
   },
   updated(){
   	//获取行高度
-  	console.log(1)
+  	// console.log(1)
   	this.wrapheight = this.$refs.dateheight.children[0].offsetHeight;
   	this.contentheight = this.$refs.dateheight.offsetHeight;
 
@@ -75,7 +75,7 @@ export default {
   },
   methods:{
   	getStart(e){
-      console.log(this.showDate)
+      // console.log(this.showDate)
   		//初始按下
   		this.startEl = this.translateY;
   		this.movestart = e.changedTouches[0].pageY;

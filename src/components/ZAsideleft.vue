@@ -50,10 +50,10 @@ export default {
 }
 
 .fage-enter-active{
-	animation: usegoin .5s linear;
+	animation: usegoin .3s linear;
 }
 .fage-leave-active{
-	animation: usegoout .5s linear;
+	animation: usegoout .3s linear;
 }
 @keyframes usegoin {
 	0%{
