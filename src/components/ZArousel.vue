@@ -28,7 +28,8 @@ export default {
   		wrapW:'',
   		length:'',
   		startPonint:0,
-  		startElement:0
+  		startElement:0,
+      isEnd:true
   	}
   },
   computed:{
@@ -36,91 +37,130 @@ export default {
   			return this.autoplay=='true'?true:false;
   		},
   		getautonav(){
-  			// console.log(this.autonav)
   			return this.autonav=='true'?true:false;
   		}
   },
   mounted(){
   	this.bannerul = this.$refs.bannerlist; 	
-	this.bannerul.innerHTML += this.bannerul.innerHTML;
-	this.bannerli = Array.from(this.bannerul.children);
-	this.length = this.bannerli.length/2
+  	this.bannerul.innerHTML += this.bannerul.innerHTML;
+  	this.bannerli = Array.from(this.bannerul.children);
+  	this.length = this.bannerli.length/2;
   	this.wrapW = this.$refs.bannerWrap.clientWidth;
-  	// console.log(this.wrapW)
+
 
   	this.bannerul.style.width = this.wrapW*this.bannerli.length+'px';
 
   	for(var i=0;i<this.bannerli.length;i++){
   		this.bannerli[i].style.width = 100/this.bannerli.length+'%';
   	};
+
   	if(this.getautoplay){
 	  	this.oTimer = setInterval(()=>{
 	  		this.gocontinue();
+	  	},this.time); 
+	  	document.addEventListener('visibilitychange',()=>{
+	  		var isHidden = document.hidden;
+	  		if(isHidden){
+	  			clearInterval(this.oTimer);
+	  		}else{
+	  			this.oTimer = setInterval(()=>{
+			  		this.gocontinue();
+			  	},this.time);
+	  		}
+	  	}) 
 
-	  	},this.time);  	
   	}
   },
   methods:{
   	transitionEnd(){
-  		this.bannerul.style.transition = "none";
-  		this.currenyt = this.bannerli.length/2-1;
+      // console.log(1)
+  		this.bannerul.style.transition = "none"; 	
+  		this.currenyt = this.bannerli.length/2-1;	
   		this.translateX = -this.currenyt* this.wrapW;
-		this.bannerul.style.transform = "translateX("+this.translateX+"px)"
+		  this.bannerul.style.transform = "translateX("+this.translateX+"px)";
+      this.startElement = this.translateX;
+      this.isEnd = true;
   	},
+    transitionEndtwo(){
+      this.bannerul.style.transition = "none";  
+      this.currenyt = this.bannerli.length/2; 
+      this.translateX = -this.currenyt* this.wrapW;
+      this.bannerul.style.transform = "translateX("+this.translateX+"px)";
+      this.startElement = this.translateX;
+      this.isEnd = true;
+    },
   	bannerstart(e){
+      if(!this.isEnd)return ;
   		clearInterval(this.oTimer);	
-
-  		var now = this.currenyt
-  		this.bannerul.transition = "none";
-  		if(now==0){
-  			now = this.bannerli.length/2;
-  			// console.log(now)
-  		}
-  		if(now==this.bannerli.length-1){
-  			now = this.bannerli.length/2-1;
-  			// console.log(now)
-  		}
-  		this.translateX = -now* this.wrapW;
-  		this.bannerul.style.transform = "translateX("+this.translateX+"px)"
-
+      this.bannerul.style.transition = "none";
+  		if(this.currenyt==0){
+        this.currenyt = this.bannerli.length/2;
+      }
+      this.translateX = -this.currenyt*this.wrapW;
+      this.bannerul.style.transform = "translateX("+this.translateX+"px)";
   		this.startElement = this.translateX;
+
   		// console.log(this.translateX)
   		this.startPonint = e.changedTouches[0].pageX;
   	},
   	bannermove(e){
+      if(!this.isEnd)return ;
+      this.bannerul.transition = "none";
   		var nowPoint = e.changedTouches[0].pageX;
   		var dis = nowPoint - this.startPonint;
   		// console.log(dis)
   		this.translateX = this.startElement + dis;
   		this.bannerul.style.transform = "translateX("+this.translateX+"px)";
   	},
-	bannerend(e){
-		this.currenyt = Math.round(Math.abs(this.translateX/this.wrapW));
+  	bannerend(e){
+      if(!this.isEnd)return ;
+  		this.currenyt = Math.round(Math.abs(this.translateX/this.wrapW));
 
-		this.translateX = -this.currenyt* this.wrapW;
-	  	this.bannerul.style.transform = "translateX("+this.translateX+"px)";
+      this.bannerul.removeEventListener('transitionend',this.transitionEnd)
+      this.bannerul.removeEventListener('transitionend',this.transitionEndtwo)
+
+  		this.translateX = -this.currenyt* this.wrapW;		
+  	  this.bannerul.style.transform = "translateX("+this.translateX+"px)";
+      this.bannerul.style.transition = ".5s";
+      this.startElement = this.translateX;
+
+      // console.log(this.currenyt)
+      if(this.currenyt >= this.bannerli.length-1 ){
+        this.isEnd=false;
+        this.bannerul.addEventListener('transitionend',this.transitionEnd);
+        return;
+        // this.transitionEnd();
+      }
+      if(this.currenyt <= 0 ){
+        this.isEnd=false;
+        this.bannerul.addEventListener('transitionend',this.transitionEndtwo);
+        return;
+        // this.transitionEndtwo();
+      };
+
 	  	if(this.getautoplay){
 	  		this.oTimer = setInterval(()=>{
 		  		this.gocontinue();
-
 		  	},this.time); 
-	  	}  	
-	},
-	gocontinue(){
-		this.currenyt++;	
-  		if(this.currenyt==this.bannerli.length-1){
-  			this.translateX = -this.currenyt* this.wrapW;
-  			this.bannerul.style.transform = "translateX("+this.translateX+"px)"
-  			this.bannerul.addEventListener('transitionend',this.transitionEnd);
-  			return;
-  		};
+	  	};	
+  	},
+  	gocontinue(){
+  		this.currenyt++;	
+  		
+    		if(this.currenyt==this.bannerli.length-1){
+    			this.translateX = -this.currenyt* this.wrapW;
+    			this.bannerul.style.transform = "translateX("+this.translateX+"px)";
 
-  		this.bannerul.removeEventListener('transitionend',this.transitionEnd);
-  		this.translateX = -this.currenyt* this.wrapW;
-  		this.bannerul.style.transform = "translateX("+this.translateX+"px)"
-  		this.bannerul.style.transition = ".5s transform";
+    			this.bannerul.addEventListener('transitionend',this.transitionEnd);
+    			return;
+    		};
 
-	}
+    		this.bannerul.removeEventListener('transitionend',this.transitionEnd);
+    		this.translateX = -this.currenyt* this.wrapW;
+    		this.bannerul.style.transform = "translateX("+this.translateX+"px)"
+    		this.bannerul.style.transition = ".5s transform";
+
+  	}
   }
 };
 </script>

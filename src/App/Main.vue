@@ -18,6 +18,7 @@
                 </div>
             </div>
         </z-asideleft>
+        
         <z-scroll>
             <!-- 轮播图 -->
             <z-arousel :showimg="lists" time="1500" autoplay="true" autonav="true" class="main-carousel">

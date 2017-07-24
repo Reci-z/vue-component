@@ -1,6 +1,5 @@
  <template>
  <div class="main-scroll" ref="scrollclientW">
-      <slot name="loading"></slot>
     <div class="myscroll" @touchstart="scrollstart($event)" @touchmove="scrollmove($event)" @touchend="scrollend($event)"  ref="usescroll">
       <slot></slot>   
     </div>
@@ -12,7 +11,6 @@
  </template>
  
  <script>
- import Vue from 'vue'
  export default {
    name: 'ZScroll',
    data(){
@@ -21,14 +19,11 @@
    			showBar:true,
    			SCROLL:null,
    			startEl:0,
-   			startPoint:{},
+   			startPoint:0,
    			lastDateNow:0,
    			lastTime:0,
    			lastTranslate:0,
-   			lastDis:0,
-            disTime:0,
-            isgo:true,
-            showtoast:false
+   			lastDis:0
    		}
    	}
    },
@@ -36,7 +31,7 @@
    		this.scrolldata.showBar = false;
          
    },
-	mounted(){
+	activated(){
       //滑动的元素
 		this.scrolldata.SCROLL = this.$refs.usescroll
       //可视区高度
@@ -44,7 +39,7 @@
 
       //内容高
 		this.scrolldata.ScrollH =this.$refs.usescroll.offsetHeight;
-      // console.log(this.scrolldata.wrapW,this.scrolldata.ScrollH)
+      // console.log(this.scrolldata.ScrollH)
       if(this.scrolldata.ScrollH<this.scrolldata.wrapW){
          this.scrolldata.SCROLL.style.height="100%";
       }
@@ -63,29 +58,22 @@
 
 	},
    methods:{
-      change(){
-         Vue.nextTick(function(){
-            console.log(1)
-         })
-      },
    	scrollstart(e){
          if(this.scrolldata.ScrollH<this.scrolldata.wrapW){
             return
          }
-   		this.scrolldata.showBar = false;
+   		this.scrolldata.showBar = true;
 
-         this.scrolldata.startPoint = {
-            x:e.changedTouches[0].pageX,
-            y:e.changedTouches[0].pageY
-         }
-   
+   		this.scrolldata.startPoint = e.changedTouches[0].pageY;
+
+
+         
 
    		this.scrolldata.startEl = this.getPoint();
 
    		this.scrolldata.lastDateNow = Date.now();
-         this.disTime = Date.now()
          // console.log(this.scrolldata.lastDateNow)
-   		this.scrolldata.lastTranslate = this.scrolldata.startPoint.y;
+   		this.scrolldata.lastTranslate = this.scrolldata.startPoint;
          this.scrolldata.lastTime = 0;
          this.scrolldata.lastDis = 0;
 
@@ -97,31 +85,11 @@
          if(this.scrolldata.ScrollH<this.scrolldata.wrapW){
             return
          }
-         
-         
-         var nowPoint={},dis={}
-             nowPoint.x = e.changedTouches[0].pageX;
-             nowPoint.y = e.changedTouches[0].pageY;
+   		var nowPoint = e.changedTouches[0].pageY;
+   		var dis = nowPoint - this.scrolldata.startPoint;
 
-             dis.y = nowPoint.y - this.scrolldata.startPoint.y;
-             dis.x = nowPoint.x - this.scrolldata.startPoint.x;
-             // console.log(nowPoint.x)
-         var nowTime = Date.now();
-         if((nowTime-this.disTime>0)&&(nowTime-this.disTime<300)){
-            // console.log(Math.abs(dis.y))
-            // console.log(Math.abs(dis.x))
-            if(Math.abs(dis.y)<Math.abs(dis.x)){
-               this.scrolldata.isgo = false;
-            }
-         }
+         var translate = dis + this.scrolldata.startEl;
 
-         // console.log(this.scrolldata.isgo)
-         if(!this.scrolldata.isgo){
-            return
-         }
-         this.scrolldata.showBar = true;
-         var translate = dis.y + this.scrolldata.startEl;
-         // console.log(translate)
          var F = 1
 
          if(translate>0){
@@ -146,12 +114,12 @@
          this.scrolldata.lastTime = DateNow - this.scrolldata.lastDateNow;
          // console.log(this.scrolldata.lastTime)
 
-         this.scrolldata.lastDis = nowPoint.y -this.scrolldata.lastTranslate;
+         this.scrolldata.lastDis = nowPoint -this.scrolldata.lastTranslate;
 
          // console.log(this.scrolldata.lastDis)
 
          this.scrolldata.lastDateNow = DateNow;
-         this.scrolldata.lastTranslate = nowPoint.y;
+         this.scrolldata.lastTranslate = nowPoint;
 
    	},
    	scrollend(){
@@ -159,7 +127,7 @@
             return
          }
          var speed = this.scrolldata.lastDis/this.scrolldata.lastTime
-
+         // console.log(this.scrolldata.lastDis,this.scrolldata.lastTime)
          speed = isNaN(speed)? 0 : speed;
          var dis = speed * 266;
          var target = dis + this.getPoint() ;
@@ -176,7 +144,6 @@
 
          time = time<200?200:time;
          time = time>1200?1200:time;
-         this.change();
 
          this.$refs.usescroll.style.transform="translateY("+target+"px)";
          // console.log(time*0.01)
@@ -184,9 +151,6 @@
          this.$refs.backscrool.style.transition=time*0.001+"s transform";
          
          if(this.scrolldata.showBar){
-            if(-target*this.scrolldata.scale == 0){
-               this.scrolldata.showBar = false;
-            }
             // console.log(-translate*this.scrolldata.scale)
            this.$refs.backscrool.style.transform="translate3d(0,"+(-target*this.scrolldata.scale)+"px,0)"
            this.$refs.backscrool.style.transition=time*0.001+"s transform";
@@ -195,7 +159,6 @@
          this.$refs.backscrool.addEventListener('transitionend',()=>{
             this.scrolldata.showBar = false;
          })
-         this.scrolldata.isgo = true;
    	},
       getPoint(){
          var getnum = this.scrolldata.SCROLL.style.transform
@@ -224,7 +187,6 @@
  	left: 0;
  	right: 0;
  	overflow: hidden;
-   z-index: 2;
  }
  .zmouse-scroll{
  	position: absolute;
